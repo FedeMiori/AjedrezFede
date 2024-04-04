@@ -114,17 +114,19 @@ public class Tablero {
         Pieza piezaAMover = getPiezaEnCasilla(posicionOrigen);
         Pieza piezaEnDestino = getPiezaEnCasilla(posicionDestino);
         int[] vectorMovimiento = posicionOrigen.getVector( posicionDestino );
-        //primero comprueba que en la posicion selecionada haya una fichaa que mover
-        //y se comprueba que el movimiento sea valido para esa pieza pasandole el vector del movimiento
-        //Ej: una torre no acepta un movimiento diagonal
-        if(piezaAMover != null && piezaAMover.movimientoValido(vectorMovimiento)) {
-            //Segundo se comprueba que en la trayectoria entre orijen y destino no haya otras piezas
-            //o en su defecto que la ficha a mover sea un caballo ya que puede saltar por encima de otras piezas
-            if (caminoDespejado(posicionOrigen, posicionDestino) || piezaAMover instanceof Caballo)
-                //y por ultimo que la casilla destino este vacia o que la pieza sea del coloe opuesto
-                // ya que no se puede mover una pieza a una casilla donde hay otra pieza del mismo color
-                if (piezaEnDestino == null || piezaEnDestino.distintoColor(piezaAMover))
-                    autorizadoAMover = true;
+        //primero comprobamos que ambas posiciones esten dentro del tablero para evitar errores
+        if(posicionOrigen.dentroLimites(ALTO_TABLERO, ANCHO_TABLERO) && posicionDestino.dentroLimites(ALTO_TABLERO, ANCHO_TABLERO)){
+            //Segundo comprueba que en la posicion selecionada haya una fichaa que mover
+            //y se comprueba que el movimiento sea valido para esa pieza pasandole el vector del movimiento
+            //Ej: una torre no acepta un movimiento diagonal
+            if(piezaAMover != null && piezaAMover.movimientoValido(vectorMovimiento))
+                //Tercero se comprueba que en la trayectoria entre orijen y destino no haya otras piezas
+                //o en su defecto que la ficha a mover sea un caballo ya que puede saltar por encima de otras piezas
+                if (caminoDespejado(posicionOrigen, posicionDestino) || piezaAMover instanceof Caballo)
+                    //y por ultimo que la casilla destino este vacia o que la pieza sea del coloe opuesto
+                    // ya que no se puede mover una pieza a una casilla donde hay otra pieza del mismo color
+                    if (piezaEnDestino == null || piezaEnDestino.distintoColor(piezaAMover))
+                        autorizadoAMover = true;
         }
         else if(piezaAMover instanceof Peon && piezaAMover.movimientoValido(vectorMovimiento, piezaEnDestino))
             autorizadoAMover = true;
@@ -133,7 +135,8 @@ public class Tablero {
             piezaAMover.incrementarNumMovimientos();
             getCasilla(posicionOrigen).setPieza(null);
             getCasilla(posicionDestino).setPieza(piezaAMover);
-        }
+        }else
+            System.out.println("No se pudo realizar el movimiento");
     }
 
     /**
