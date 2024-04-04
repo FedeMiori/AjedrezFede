@@ -1,8 +1,8 @@
-package tiposFicha;
+package tiposPieza;
 
 import static java.lang.Math.abs;
 
-public class Reina extends Ficha{
+public class Reina extends Pieza {
     public Reina(Color color) {
         super('Q',color);
     }

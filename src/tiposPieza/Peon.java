@@ -1,6 +1,6 @@
-package tiposFicha;
+package tiposPieza;
 
-public class Peon extends Ficha{
+public class Peon extends Pieza {
     public Peon(Color color) {
         super('P',color);
     }

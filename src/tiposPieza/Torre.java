@@ -1,6 +1,6 @@
-package tiposFicha;
+package tiposPieza;
 
-public class Torre extends Ficha{
+public class Torre extends Pieza {
     public Torre(Color color) {
         super('R',color);
     }

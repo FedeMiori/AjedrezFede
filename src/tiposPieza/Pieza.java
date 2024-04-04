@@ -1,11 +1,11 @@
-package tiposFicha;
-public abstract class Ficha {
+package tiposPieza;
+public abstract class Pieza {
     private char letra;
     private Color color;
 
     private int numMovimientos;
 
-    public Ficha(char letra, Color color) {
+    public Pieza(char letra, Color color) {
         this.letra = letra;
         this.color = color;
         numMovimientos=0;

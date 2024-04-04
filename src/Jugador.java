@@ -1,10 +1,10 @@
-import tiposFicha.Ficha;
+import tiposPieza.Pieza;
 
 import java.util.ArrayList;
 
 public class Jugador {
     private String nombre;
-    private ArrayList<Ficha> fichasJugador;
+    private ArrayList<Pieza> fichasJugador;
 
     public Jugador(String nombre){
         this.nombre = nombre;

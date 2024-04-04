@@ -1,6 +1,6 @@
-package tiposFicha;
+package tiposPieza;
 
-public class Rey extends Ficha{
+public class Rey extends Pieza {
     public Rey(Color color) {
         super('K',color);
     }

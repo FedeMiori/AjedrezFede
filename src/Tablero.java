@@ -1,4 +1,4 @@
-import tiposFicha.*;
+import tiposPieza.*;
 
 public class Tablero {
     private final int altoTablero=8;
@@ -103,8 +103,8 @@ public class Tablero {
     public static void main(String[] args) {
         Tablero tablero=new Tablero();
         tablero.inicializar();
-        Ficha fichaAMover=tablero.getCasilla('a',1).getFicha();
-        tablero.getCasilla('a',3).setFicha( fichaAMover );
+        Pieza piezaAMover =tablero.getCasilla('a',1).getFicha();
+        tablero.getCasilla('a',3).setFicha(piezaAMover);
         tablero.getCasilla('a',1).setFicha(null);
         tablero.printTablero();
     }

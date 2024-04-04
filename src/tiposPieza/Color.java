@@ -1,4 +1,4 @@
-package tiposFicha;
+package tiposPieza;
 public enum Color{blanco, negro}
 
 

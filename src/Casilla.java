@@ -1,9 +1,9 @@
-import tiposFicha.Ficha;
+import tiposPieza.Pieza;
 
 public class Casilla {
     private char longitud;
     private int altura;
-    private Ficha ficha;
+    private Pieza pieza;
 
 
     public Casilla(char longitud, int altura) {
@@ -11,10 +11,10 @@ public class Casilla {
         this.altura = altura;
     }
 
-    public Ficha getFicha() {return ficha;}
+    public Pieza getFicha() {return pieza;}
 
-    public void setFicha(Ficha fichaEntrada) {
-        ficha = fichaEntrada;
+    public void setFicha(Pieza piezaEntrada) {
+        pieza = piezaEntrada;
     }
 
     public String nombreCasilla(){
@@ -23,10 +23,10 @@ public class Casilla {
 
     public String toString(){
         String resultado;
-        if(ficha==null)
+        if(pieza ==null)
             resultado = " ";
         else
-            resultado = ficha.toString();
+            resultado = pieza.toString();
         return resultado;
     }
 }
