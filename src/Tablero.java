@@ -30,7 +30,10 @@ public class Tablero {
     }
 
     public Pieza getPiezaEnCasilla(Posicion posicion){
-        return getCasilla(posicion).getPieza();
+        if(posicion.dentroLimites(ALTO_TABLERO,ANCHO_TABLERO))
+            return getCasilla(posicion).getPieza();
+        else
+            return null;
     }
 
     /**
@@ -108,29 +111,40 @@ public class Tablero {
 
     /**
      * Metodo que mueve la pieza situalda en posicionOrigen a la posicionDestino
+     * Explicacion de los IFs:
+     * En el 1er if comprobamos que ambas posiciones esten dentro del tablero para evitar errores
+     *
+     * El 2o comprueba que en la posicion selecionada haya una fichaa que mover
+     *             y se comprueba que el movimiento sea valido para esa pieza pasandole el vector del movimiento
+     *             Ej: una torre no acepta un movimiento diagonal
+     *
+     * En el 3o se comprueba que en la trayectoria entre orijen y destino no haya otras piezas
+     *             o en su defecto que la ficha a mover sea un caballo ya que puede saltar por encima de otras piezas
+     *
+     * Y en el ultimo  se comprueba que la casilla destino este vacia o que la pieza sea del coloe opuesto
+     *             ya que no se puede mover una pieza a una casilla donde hay otra pieza del mismo color
      */
     public void moverPieza(Posicion posicionOrigen, Posicion posicionDestino){
         boolean autorizadoAMover = false;
         Pieza piezaAMover = getPiezaEnCasilla(posicionOrigen);
         Pieza piezaEnDestino = getPiezaEnCasilla(posicionDestino);
         int[] vectorMovimiento = posicionOrigen.getVector( posicionDestino );
-        //primero comprobamos que ambas posiciones esten dentro del tablero para evitar errores
+
         if(posicionOrigen.dentroLimites(ALTO_TABLERO, ANCHO_TABLERO) && posicionDestino.dentroLimites(ALTO_TABLERO, ANCHO_TABLERO)){
-            //Segundo comprueba que en la posicion selecionada haya una fichaa que mover
-            //y se comprueba que el movimiento sea valido para esa pieza pasandole el vector del movimiento
-            //Ej: una torre no acepta un movimiento diagonal
-            if(piezaAMover != null && piezaAMover.movimientoValido(vectorMovimiento))
-                //Tercero se comprueba que en la trayectoria entre orijen y destino no haya otras piezas
-                //o en su defecto que la ficha a mover sea un caballo ya que puede saltar por encima de otras piezas
+
+            if(piezaAMover != null && piezaAMover.movimientoValido(vectorMovimiento)) {
+
                 if (caminoDespejado(posicionOrigen, posicionDestino) || piezaAMover instanceof Caballo)
-                    //y por ultimo que la casilla destino este vacia o que la pieza sea del coloe opuesto
-                    // ya que no se puede mover una pieza a una casilla donde hay otra pieza del mismo color
+
                     if (piezaEnDestino == null || piezaEnDestino.distintoColor(piezaAMover))
                         autorizadoAMover = true;
-        }
-        else if(piezaAMover instanceof Peon && piezaAMover.movimientoValido(vectorMovimiento, piezaEnDestino))
-            autorizadoAMover = true;
+            }
 
+            else if(piezaAMover instanceof Peon && piezaAMover.movimientoValido(vectorMovimiento, piezaEnDestino))
+                autorizadoAMover = true;
+        }
+
+        //Aquí hace el movimiento como tal
         if(autorizadoAMover){
             piezaAMover.incrementarNumMovimientos();
             getCasilla(posicionOrigen).setPieza(null);
