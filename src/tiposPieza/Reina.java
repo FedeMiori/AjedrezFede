@@ -7,7 +7,8 @@ public class Reina extends Pieza {
         super('Q',color);
     }
 
-    public boolean puedeMoverse(int movimientoVertical, int movimientoHorizontal){
+    @Override
+    public boolean movimientoValido(int movimientoHorizontal, int movimientoVertical){
         boolean puede = false;
         //Movimiento horizontal
         if(movimientoVertical == 0 && movimientoHorizontal != 0)

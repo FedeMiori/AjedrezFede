@@ -7,7 +7,8 @@ public class Caballo extends Pieza {
         super('N',color);
     }
 
-    public boolean puedeMoverse(int movimientoVertical, int movimientoHorizontal){
+    @Override
+    public boolean movimientoValido(int movimientoHorizontal, int movimientoVertical){
         boolean puede=false;
         if(abs(movimientoVertical) == 2 && abs(movimientoHorizontal) == 1)
             puede = true;

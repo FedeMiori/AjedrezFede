@@ -5,7 +5,8 @@ public class Torre extends Pieza {
         super('R',color);
     }
 
-    public boolean puedeMoverse(int movimientoVertical, int movimientoHorizontal){
+    @Override
+    public boolean movimientoValido(int movimientoHorizontal, int movimientoVertical){
         boolean puede = false;
         if(movimientoVertical == 0 && movimientoHorizontal != 0)
             puede = true;

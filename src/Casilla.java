@@ -1,32 +1,28 @@
 import tiposPieza.Pieza;
 
 public class Casilla {
-    private char longitud;
-    private int altura;
+    private Posicion posicion;
     private Pieza pieza;
 
 
-    public Casilla(char longitud, int altura) {
-        this.longitud = longitud;
-        this.altura = altura;
+    public Casilla(Posicion posicion) {
+        this.posicion=posicion;
     }
 
-    public Pieza getFicha() {return pieza;}
+    public Pieza getPieza() {return pieza;}
 
-    public void setFicha(Pieza piezaEntrada) {
-        pieza = piezaEntrada;
+    public void setPieza(Pieza pieza) {
+        this.pieza = pieza;
     }
 
-    public String nombreCasilla(){
-        return "" + longitud + altura;
+    public String posicionCasilla(){
+        return posicion.getNotacionAlgebraica();
     }
 
     public String toString(){
-        String resultado;
         if(pieza ==null)
-            resultado = " ";
+            return " ";
         else
-            resultado = pieza.toString();
-        return resultado;
+            return pieza.toString();
     }
 }

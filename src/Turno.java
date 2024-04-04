@@ -3,9 +3,13 @@ public class Turno {
     private Jugador[] jugadores;
     private int tieneTurno;
 
+    public Turno(Jugador[] jugadores){
+        this.jugadores=jugadores;
+        tieneTurno=0;
+    }
+
     public Turno(){
-        jugadores = crearJugadores();
-        tieneTurno = 0;
+        this(crearJugadores());
     }
 
     private static Jugador[] crearJugadores(){

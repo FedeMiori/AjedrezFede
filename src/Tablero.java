@@ -1,111 +1,167 @@
 import tiposPieza.*;
 
 public class Tablero {
-    private final int altoTablero=8;
-    private final int anchoTablero=8;
+    private final int ALTO_TABLERO = 8;
+    private final int ANCHO_TABLERO = 8;
 
-    Casilla[][] casillas = new Casilla[altoTablero][anchoTablero];
+    Casilla[][] casillas = new Casilla[ALTO_TABLERO][ANCHO_TABLERO];
 
     public Tablero(){
-        char caracter;
-        for (int i = 0; i < altoTablero; i++) {
-            for (int j = 0; j < anchoTablero; j++) {
-                caracter = (char)('a'+j);
-                casillas[i][j] = new Casilla(caracter,i+1);
+        for (int i = 0; i < ALTO_TABLERO; i++) {
+            for (int j = 0; j < ANCHO_TABLERO; j++) {
+                casillas[i][j] = new Casilla( new Posicion(i,j) );
             }
         }
     }
+    public Casilla getCasilla(char letra, int numero){
+        String input = String.valueOf(letra) + String.valueOf(numero);
+        return getCasilla( new Posicion( input ) );
+    }
 
-    public Casilla getCasilla(char letraColumna, int numAlto){
+    public Casilla getCasilla(Posicion posicion){
         Casilla casilla = null;
-        int numLargo = (int) letraColumna - 'a';
-        numAlto--;
-        if( numAlto >= 0 && numAlto < altoTablero && numLargo >= 0 && numLargo < anchoTablero)
-            casilla = casillas[numAlto][numLargo];
+        if( posicion.dentroLimites(ALTO_TABLERO, ANCHO_TABLERO))
+            casilla = casillas[posicion.getPosX()][posicion.getPosY()];
         return casilla;
     }
 
+    public boolean casillaVacia(Posicion posicion){
+        return getCasilla(posicion).getPieza() == null;
+    }
+
+    public Pieza getPiezaEnCasilla(Posicion posicion){
+        return getCasilla(posicion).getPieza();
+    }
+
+    /**
+     * Metodo que dibuja un tablero muy detallado por la terminal
+     */
     public void printTablero(){
-        for (int i = altoTablero-1 ; i >=0; i--) {
+        System.out.print("   ");
+        for (int i = 0; i < ANCHO_TABLERO; i++) {
+            System.out.print("  "+(char) ('a'+i)+" ");
+        }
+        System.out.println();
+
+        for (int i = ALTO_TABLERO -1; i >=0; i--) {
             System.out.print("   ");
-            for (int j = 0; j < anchoTablero; j++) {
+            for (int j = 0; j < ANCHO_TABLERO; j++) {
                 System.out.print("+---");
             }
             System.out.println("+");
 
-            System.out.print(" "+(i+1)+" ");
-            for (int j = 0; j < anchoTablero; j++) {
-                System.out.print("| "+casillas[i][j].toString()+" ");
+            System.out.print((i+1)+"  ");
+            for (int j = 0; j < ANCHO_TABLERO; j++) {
+                System.out.print("| "+casillas[j][i].toString()+" ");
             }
-            System.out.println("|");
+            System.out.println("|  "+(i+1));
         }
         System.out.print("   ");
-        for (int j = 0; j < anchoTablero; j++) {
+        for (int j = 0; j < ANCHO_TABLERO; j++) {
             System.out.print("+---");
         }
         System.out.println("+");
         System.out.print("   ");
-        for (int i = 0; i < anchoTablero; i++) {
+        for (int i = 0; i < ANCHO_TABLERO; i++) {
             System.out.print("  "+(char) ('a'+i)+" ");
         }
+        System.out.println();
     }
-
-    /**
-     *
-     */
-    public void printTableroSimple(){
-        for (int i = 0; i < 8; i++) {
-            for (int j = 0; j < 8; j++) {
-                System.out.print("|"+casillas[i][j].toString());
-            }
-            System.out.println("|");
-        }
-    }
-
+    
     public void inicializar(){
 
         //Colocamos peones
-        for (int i = 0; i < anchoTablero; i++) {
-            casillas[1][i].setFicha( new Peon(Color.blanco) );
-            casillas[6][i].setFicha( new Peon(Color.negro) );
+        for (int i = 0; i < ANCHO_TABLERO; i++) {
+            casillas[i][1].setPieza( new Peon(Color.blanco) );
+            casillas[i][6].setPieza( new Peon(Color.negro) );
         }
 
         //Colocamos torres:
 
-        getCasilla('a',1).setFicha( new Torre(Color.blanco) );
-        getCasilla('h',1).setFicha( new Torre(Color.blanco) );
-        getCasilla('a',8).setFicha( new Torre(Color.negro) );
-        getCasilla('h',8).setFicha( new Torre(Color.negro) );
+        getCasilla('a',1).setPieza( new Torre(Color.blanco) );
+        getCasilla('h',1).setPieza( new Torre(Color.blanco) );
+        getCasilla('a',8).setPieza( new Torre(Color.negro) );
+        getCasilla('h',8).setPieza( new Torre(Color.negro) );
 
         //Colocamos caballos:
-        getCasilla('b',1).setFicha( new Caballo(Color.blanco) );
-        getCasilla('g',1).setFicha( new Caballo(Color.blanco) );
-        getCasilla('b',8).setFicha( new Caballo(Color.negro) );
-        getCasilla('g',8).setFicha( new Caballo(Color.negro) );
+        getCasilla('b',1).setPieza( new Caballo(Color.blanco) );
+        getCasilla('g',1).setPieza( new Caballo(Color.blanco) );
+        getCasilla('b',8).setPieza( new Caballo(Color.negro) );
+        getCasilla('g',8).setPieza( new Caballo(Color.negro) );
 
         //Alfiles
-        getCasilla('c',1).setFicha( new Alfil(Color.blanco) );
-        getCasilla('f',1).setFicha( new Alfil(Color.blanco) );
-        getCasilla('c',8).setFicha( new Alfil(Color.negro) );
-        getCasilla('f',8).setFicha( new Alfil(Color.negro) );
+        getCasilla('c',1).setPieza( new Alfil(Color.blanco) );
+        getCasilla('f',1).setPieza( new Alfil(Color.blanco) );
+        getCasilla('c',8).setPieza( new Alfil(Color.negro) );
+        getCasilla('f',8).setPieza( new Alfil(Color.negro) );
 
         //Reyes
-        getCasilla('e',1).setFicha( new Rey(Color.blanco) );
-        getCasilla('e',8).setFicha( new Rey(Color.negro) );
+        getCasilla('e',1).setPieza( new Rey(Color.blanco) );
+        getCasilla('e',8).setPieza( new Rey(Color.negro) );
 
         //Reinas
-        getCasilla('d',1).setFicha( new Reina(Color.blanco) );
-        getCasilla('d',8).setFicha( new Reina(Color.negro) );
+        getCasilla('d',1).setPieza( new Reina(Color.blanco) );
+        getCasilla('d',8).setPieza( new Reina(Color.negro) );
 
 
     }
 
-    public static void main(String[] args) {
-        Tablero tablero=new Tablero();
-        tablero.inicializar();
-        Pieza piezaAMover =tablero.getCasilla('a',1).getFicha();
-        tablero.getCasilla('a',3).setFicha(piezaAMover);
-        tablero.getCasilla('a',1).setFicha(null);
-        tablero.printTablero();
+    /**
+     * Metodo que mueve la pieza situalda en posicionOrigen a la posicionDestino
+     */
+    public void moverPieza(Posicion posicionOrigen, Posicion posicionDestino){
+        boolean autorizadoAMover = false;
+        Pieza piezaAMover = getPiezaEnCasilla(posicionOrigen);
+        Pieza piezaEnDestino = getPiezaEnCasilla(posicionDestino);
+        int[] vectorMovimiento = posicionOrigen.getVector( posicionDestino );
+        //primero comprueba que en la posicion selecionada haya una fichaa que mover
+        //y se comprueba que el movimiento sea valido para esa pieza pasandole el vector del movimiento
+        //Ej: una torre no acepta un movimiento diagonal
+        if(piezaAMover != null && piezaAMover.movimientoValido(vectorMovimiento)) {
+            //Segundo se comprueba que en la trayectoria entre orijen y destino no haya otras piezas
+            //o en su defecto que la ficha a mover sea un caballo ya que puede saltar por encima de otras piezas
+            if (caminoDespejado(posicionOrigen, posicionDestino) || piezaAMover instanceof Caballo)
+                //y por ultimo que la casilla destino este vacia o que la pieza sea del coloe opuesto
+                // ya que no se puede mover una pieza a una casilla donde hay otra pieza del mismo color
+                if (piezaEnDestino == null || piezaEnDestino.distintoColor(piezaAMover))
+                    autorizadoAMover = true;
+        }
+        else if(piezaAMover instanceof Peon && piezaAMover.movimientoValido(vectorMovimiento, piezaEnDestino))
+            autorizadoAMover = true;
+
+        if(autorizadoAMover){
+            piezaAMover.incrementarNumMovimientos();
+            getCasilla(posicionOrigen).setPieza(null);
+            getCasilla(posicionDestino).setPieza(piezaAMover);
+        }
+    }
+
+    /**
+     * Metodo que indica si las casillas intermedias entre dos posiciones estan vacias
+     * sirve para ver si una pieza que no sea un caballo tiene el camino despejado para autorizar el movimiento
+     * @param origen posicion origen del movimiento
+     * @param destino posicion ddestino del movimiento
+     * @return devuelve true si la trayectoria entre los dos puntos no tiene piezas
+     */
+    public boolean caminoDespejado(Posicion origen, Posicion destino){
+        int[] vector = origen.getVector(destino);
+        boolean sinObstaculos = true;
+        Posicion posicionIteradora = new Posicion( origen.getPosX(), origen.getPosY() );
+        if( vector[0]*vector[1] == 0 || Math.abs(vector[0]) == Math.abs(vector[1]) ){
+            for (int i = 0; i < vector.length; i++) {
+                if(vector[i] < 0) vector[i] = -1;
+                else if(vector[i] > 0) vector[i] = 1;
+            }
+            posicionIteradora.sumarVector( vector );
+            while(!posicionIteradora.equals(destino)
+                    && posicionIteradora.dentroLimites(ANCHO_TABLERO,ALTO_TABLERO)
+                    && sinObstaculos){
+                if(!casillaVacia(posicionIteradora)) {
+                    sinObstaculos = false;
+                }
+                posicionIteradora.sumarVector(vector);
+            }
+        }
+        return sinObstaculos;
     }
 }

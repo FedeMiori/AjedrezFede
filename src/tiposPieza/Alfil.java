@@ -7,7 +7,8 @@ public class Alfil extends Pieza {
         super('B',color);
     }
 
-    public boolean puedeMoverse(int movimientoVertical, int movimientoHorizontal){
+    @Override
+    public boolean movimientoValido(int movimientoHorizontal, int movimientoVertical){
         boolean puede=false;
         if(abs(movimientoHorizontal) == abs(movimientoVertical) && movimientoHorizontal != 0)
             puede=true;

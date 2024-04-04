@@ -5,15 +5,12 @@ public class Rey extends Pieza {
         super('K',color);
     }
 
-    public boolean puedeMoverse(int movimientoVertical, int movimientoHorizontal){
+    @Override
+    public boolean movimientoValido(int movimientoHorizontal, int movimientoVertical){
         boolean puede=false;
         if(movimientoVertical != 0 || movimientoHorizontal != 0)
             if(movimientoVertical <= 1 && movimientoHorizontal <= 1)
                 puede=true;
         return puede;
-    }
-
-    public static void main(String[] args) {
-
     }
 }
