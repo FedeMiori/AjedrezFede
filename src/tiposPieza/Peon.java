@@ -23,8 +23,7 @@ public class Peon extends Pieza {
         return puede;
     }
 
-    @Override
-    public boolean movimientoValido(int[] vectorMovimiento, Pieza piezaAComer){
+    public boolean peonPuedeComer(int[] vectorMovimiento, Pieza piezaAComer){
         boolean puede = movimientoValido(vectorMovimiento);
 
         if( piezaAComer != null && this.distintoColor(piezaAComer)

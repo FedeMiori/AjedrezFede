@@ -150,7 +150,7 @@ public class Tablero {
             getCasilla(posicionOrigen).setPieza(null);
             getCasilla(posicionDestino).setPieza(piezaAMover);
         }else
-            System.out.println("No se pudo realizar el movimiento");
+            System.out.println("\nERROR: No se pudo realizar el movimiento");
     }
 
     /**
@@ -162,23 +162,37 @@ public class Tablero {
      */
     public boolean caminoDespejado(Posicion origen, Posicion destino){
         int[] vector = origen.getVector(destino);
+        int[] vectorUnitario = getVectorUnitario(vector);
+
         boolean sinObstaculos = true;
         Posicion posicionIteradora = new Posicion( origen.getPosX(), origen.getPosY() );
+
+        //Aquí se comprueba que el vector sea diagonal, horizontal o diagonal
         if( vector[0]*vector[1] == 0 || Math.abs(vector[0]) == Math.abs(vector[1]) ){
-            for (int i = 0; i < vector.length; i++) {
-                if(vector[i] < 0) vector[i] = -1;
-                else if(vector[i] > 0) vector[i] = 1;
-            }
-            posicionIteradora.sumarVector( vector );
-            while(!posicionIteradora.equals(destino)
+            //a la posicion iteradora le sumo el vector unitario
+            posicionIteradora.sumarVector( vectorUnitario );
+            while( ! posicionIteradora.equals(destino)
                     && posicionIteradora.dentroLimites(ANCHO_TABLERO,ALTO_TABLERO)
                     && sinObstaculos){
                 if(!casillaVacia(posicionIteradora)) {
                     sinObstaculos = false;
                 }
-                posicionIteradora.sumarVector(vector);
+                posicionIteradora.sumarVector(vectorUnitario);
             }
         }
         return sinObstaculos;
+    }
+
+    private static int[] getVectorUnitario(int[] vector){
+        int[] vectorUnitario= new int[vector.length];
+        for (int i = 0; i < vector.length; i++) {
+            if(vector[i] < 0)
+                vectorUnitario[i] = -1;
+            else if(vector[i] > 0)
+                vectorUnitario[i] = 1;
+            else
+                vectorUnitario[i] = 0;
+        }
+        return vectorUnitario;
     }
 }
