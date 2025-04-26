@@ -111,18 +111,7 @@ public class Tablero {
 
     /**
      * Metodo que mueve la pieza situalda en posicionOrigen a la posicionDestino
-     * Explicacion de los IFs:
-     * En el 1er if comprobamos que ambas posiciones esten dentro del tablero para evitar errores
-     *
-     * El 2o comprueba que en la posicion selecionada haya una fichaa que mover
-     *             y se comprueba que el movimiento sea valido para esa pieza pasandole el vector del movimiento
-     *             Ej: una torre no acepta un movimiento diagonal
-     *
-     * En el 3o se comprueba que en la trayectoria entre orijen y destino no haya otras piezas
-     *             o en su defecto que la ficha a mover sea un caballo ya que puede saltar por encima de otras piezas
-     *
-     * Y en el ultimo  se comprueba que la casilla destino este vacia o que la pieza sea del coloe opuesto
-     *             ya que no se puede mover una pieza a una casilla donde hay otra pieza del mismo color
+     * Tiene en cuenta toda la casuistica para ver si se puede realizar ese movimiento
      */
     public void moverPieza(Posicion posicionOrigen, Posicion posicionDestino){
         boolean autorizadoAMover = false;
@@ -130,16 +119,18 @@ public class Tablero {
         Pieza piezaEnDestino = getPiezaEnCasilla(posicionDestino);
         int[] vectorMovimiento = posicionOrigen.getVector( posicionDestino );
 
+        //Comprueba que las posiciones estén dentro del tablero
         if(posicionOrigen.dentroLimites(ALTO_TABLERO, ANCHO_TABLERO) && posicionDestino.dentroLimites(ALTO_TABLERO, ANCHO_TABLERO)){
-
+            //Consulta a la pieza si puede hacer ese movimiento (Aprovechando el polimorfismo)
             if(piezaAMover != null && piezaAMover.movimientoValido(vectorMovimiento)) {
-
+                //Comprueba que no haya ninguna ficha entre las 2 posiciones excepto que sea un caballo
                 if (caminoDespejado(posicionOrigen, posicionDestino) || piezaAMover instanceof Caballo)
-
+                    //Comprueba que la casilla destino esté vacia o que contenga una ficha adversaria
                     if (piezaEnDestino == null || piezaEnDestino.distintoColor(piezaAMover))
                         autorizadoAMover = true;
             }
 
+            //Aquí se tiene en cuenta la situacion particular en la que el peon puede comer moviendose en diagonal
             else if(piezaAMover instanceof Peon && piezaAMover.movimientoValido(vectorMovimiento, piezaEnDestino))
                 autorizadoAMover = true;
         }

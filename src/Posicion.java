@@ -9,6 +9,11 @@ public class Posicion {
         this.posY = posY;
     }
 
+    /**
+     * lee la posicion en notacion algebraica y lo guarda como coordenadas
+     * ej: de "A2" lo convierte a (0,1)
+     * @param notacionAlgebraica debe tener el formato letra numero ej:a1
+     */
     public Posicion(String notacionAlgebraica){
         char letraColumna = notacionAlgebraica.toLowerCase().charAt(0);
         posX = (int) letraColumna - 'a';
@@ -28,6 +33,8 @@ public class Posicion {
         return posY;
     }
 
+    //Convierte a notacion algebraica
+    // Ej: dado posX=1 y posY=1 devuelve "B2"
     public String getNotacionAlgebraica(){
         char letra = (char) ('a' + posX);
         int numero = posY + 1;
