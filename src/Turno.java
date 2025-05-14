@@ -1,3 +1,5 @@
+import tiposPieza.Color;
+
 import java.util.*;
 public class Turno {
     private Jugador[] jugadores;
@@ -8,21 +10,21 @@ public class Turno {
         tieneTurno=0;
     }
 
-    public Turno(){
-        this(crearJugadores());
-    }
-
-    private static Jugador[] crearJugadores(){
-        Scanner teclado = new Scanner(System.in);
-        Jugador[] array = new Jugador[2];
-        System.out.println("Inserte el Nombre del 1er jugador: ");
-        String nombre=teclado.nextLine();
-        array[0] = new Jugador(nombre);
-        System.out.println("Inserte el Nombre del 2o jugador: ");
-        nombre = teclado.nextLine();
-        array[1] = new Jugador(nombre);
-        return array;
-    }
+//    public Turno(){
+//        this(crearJugadores());
+//    }
+//
+//    private static Jugador[] crearJugadores(){
+//        Scanner teclado = new Scanner(System.in);
+//        Jugador[] array = new Jugador[2];
+//        System.out.println("Inserte el Nombre del 1er jugador: ");
+//        String nombre=teclado.nextLine();
+//        array[0] = new Jugador(nombre);
+//        System.out.println("Inserte el Nombre del 2o jugador: ");
+//        nombre = teclado.nextLine();
+//        array[1] = new Jugador(nombre);
+//        return array;
+//    }
 
     public Jugador quienTieneTurno(){
         return jugadores[tieneTurno];
@@ -30,5 +32,14 @@ public class Turno {
 
     public void siguienteTurno(){
         tieneTurno = (tieneTurno + 1) % jugadores.length;
+    }
+
+    public Jugador getJugadorConColor(Color color){
+        Jugador encontrado = null;
+        for (int i = 0; i < jugadores.length; i++) {
+            if(jugadores[i].esDeColor(color))
+                encontrado = jugadores[i];
+        }
+        return encontrado;
     }
 }

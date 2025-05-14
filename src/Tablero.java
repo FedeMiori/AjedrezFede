@@ -109,11 +109,20 @@ public class Tablero {
 
     }
 
+    public boolean moverPieza(Posicion posicionOrigen, Posicion posicionDestino, Color color){
+        if(getCasilla(posicionOrigen).getPieza().esDeColor(color))
+            return moverPieza(posicionOrigen,posicionDestino);
+        else {
+            System.out.println("\nERROR: El jugador no puede mover esta pieza");
+            return false;
+        }
+    }
+
     /**
      * Metodo que mueve la pieza situalda en posicionOrigen a la posicionDestino
      * Tiene en cuenta toda la casuistica para ver si se puede realizar ese movimiento
      */
-    public void moverPieza(Posicion posicionOrigen, Posicion posicionDestino){
+    public boolean moverPieza(Posicion posicionOrigen, Posicion posicionDestino){
         boolean autorizadoAMover = false;
         Pieza piezaAMover = getPiezaEnCasilla(posicionOrigen);
         Pieza piezaEnDestino = getPiezaEnCasilla(posicionDestino);
@@ -142,6 +151,8 @@ public class Tablero {
             getCasilla(posicionDestino).setPieza(piezaAMover);
         }else
             System.out.println("\nERROR: No se pudo realizar el movimiento");
+
+        return autorizadoAMover;
     }
 
     /**
@@ -185,5 +196,30 @@ public class Tablero {
                 vectorUnitario[i] = 0;
         }
         return vectorUnitario;
+    }
+
+    public boolean finPartida(){
+        return !hayRey(Color.blanco) || !hayRey(Color.negro);
+    }
+
+    public Color quienHaGanado(){
+        Color resultado = null;
+        if(!hayRey(Color.blanco))
+            resultado = Color.negro;
+        if(!hayRey(Color.negro))
+            resultado = Color.blanco;
+        return resultado;
+    }
+
+    public boolean hayRey(Color color){
+        boolean encontrado = false;
+        for (int i = 0; i < ANCHO_TABLERO; i++) {
+            for (int j = 0; j < ALTO_TABLERO; j++) {
+                Pieza piezaProbar = casillas[i][j].getPieza();
+                if(piezaProbar instanceof Rey && piezaProbar.esDeColor(color))
+                    encontrado = true;
+            }
+        }
+        return encontrado;
     }
 }
