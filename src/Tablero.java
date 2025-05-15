@@ -114,8 +114,9 @@ public class Tablero {
         getCasilla('d',8).setPieza( new Reina(Color.negro) );
     }
 
-    public boolean moverPieza(Posicion posicionOrigen, Posicion posicionDestino, Color color){
-        if(getCasilla(posicionOrigen).getPieza().esDeColor(color))
+    public boolean moverPieza(Posicion posicionOrigen, Posicion posicionDestino, Color colorJugador){
+        Pieza piezaEnOrigen = getPiezaEnCasilla(posicionOrigen);
+        if(piezaEnOrigen != null && piezaEnOrigen.esDeColor(colorJugador))
             return moverPieza(posicionOrigen,posicionDestino);
         else {
             System.out.println("\nERROR: El jugador no puede mover esta pieza");
@@ -123,30 +124,11 @@ public class Tablero {
         }
     }
 
-    /***
-     * OJO! Busca una pieza igual (mismo tipo y color) NO BUSCA LA MISMA INSTANCIA
-     */
-    public Posicion buscarPieza(Pieza pieza){
-        int i=0, j;
-        Posicion resultadoBusqueda = null;
-        while(i < ANCHO_TABLERO){
-            j=0;
-            while(j < ALTO_TABLERO && resultadoBusqueda == null){
-                Pieza piezaAComprobar = getPiezaEnCasilla(i,j);
-                if(pieza.mismoTipoPieza(piezaAComprobar) && pieza.mismoColor(piezaAComprobar))
-                    resultadoBusqueda = new Posicion(i,j);
-                j++;
-            }
-            i++;
-        }
-        return resultadoBusqueda;
-    }
-
     /**
      * Metodo que mueve la pieza situalda en posicionOrigen a la posicionDestino
      * Tiene en cuenta toda la casuistica para ver si se puede realizar ese movimiento
      */
-    public boolean moverPieza(Posicion posicionOrigen, Posicion posicionDestino){
+    private boolean moverPieza(Posicion posicionOrigen, Posicion posicionDestino){
         Pieza piezaAMover = getPiezaEnCasilla(posicionOrigen);
         if(movimientoPosible(posicionOrigen,posicionDestino)){
             piezaAMover.incrementarNumMovimientos();
@@ -169,13 +151,12 @@ public class Tablero {
         //Comprueba que las posiciones estén dentro del tablero
         if(posicionOrigen.dentroLimites(ALTO_TABLERO, ANCHO_TABLERO) && posicionDestino.dentroLimites(ALTO_TABLERO, ANCHO_TABLERO)){
             //Consulta a la pieza si puede hacer ese movimiento (Aprovechando el polimorfismo)
-            if(piezaAMover != null && piezaAMover.movimientoValido(vectorMovimiento)) {
+            if(piezaAMover != null && piezaAMover.movimientoValido(vectorMovimiento))
                 //Comprueba que no haya ninguna ficha entre las 2 posiciones excepto que sea un caballo
                 if (caminoDespejado(posicionOrigen, posicionDestino) || piezaAMover instanceof Caballo)
                     //Comprueba que la casilla destino esté vacia o que contenga una ficha adversaria
                     if (piezaEnDestino == null || piezaEnDestino.distintoColor(piezaAMover))
                         puedeMoverse = true;
-            }
 
             //Aquí se tiene en cuenta la situacion particular en la que el peon puede comer moviendose en diagonal
             else if(piezaAMover instanceof Peon && piezaAMover.movimientoValido(vectorMovimiento, piezaEnDestino))
@@ -234,19 +215,30 @@ public class Tablero {
         return vectorUnitario;
     }
 
-    public void inicializarDEBUG(){
-        //Reyes
-        getCasilla('e',1).setPieza( new Rey(Color.blanco) );
-        getCasilla('e',8).setPieza( new Rey(Color.negro) );
-
-        getCasilla('d',6).setPieza( new Torre(Color.negro) );
-        getCasilla('d',4).setPieza( new Torre(Color.blanco) );
+    /**
+     * OJO! Busca una pieza igual (mismo tipo y color) NO BUSCA LA MISMA INSTANCIA
+     */
+    public Posicion buscarPieza(Pieza pieza){
+        int i=0, j;
+        Posicion resultadoBusqueda = null;
+        while(i < ANCHO_TABLERO){
+            j=0;
+            while(j < ALTO_TABLERO && resultadoBusqueda == null){
+                Pieza piezaAComprobar = getPiezaEnCasilla(i,j);
+                if(pieza.mismoTipoPieza(piezaAComprobar) && pieza.mismoColor(piezaAComprobar))
+                    resultadoBusqueda = new Posicion(i,j);
+                j++;
+            }
+            i++;
+        }
+        return resultadoBusqueda;
     }
 
-    public static void main(String[] args) {
-        Tablero t = new Tablero();
-        t.inicializarDEBUG();
-        t.printTablero();
-        System.out.println(t.movimientoPosible(new Posicion('d',6),new Posicion('e',6)));
+    public void inicializarDEBUG(){
+        //Reyes
+        getCasilla('e',3).setPieza( new Rey(Color.blanco) );
+        getCasilla('e',6).setPieza( new Rey(Color.negro) );
+
+        getCasilla('h',7).setPieza( new Torre(Color.blanco) );
     }
 }

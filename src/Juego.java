@@ -15,10 +15,11 @@ public class Juego {
     }
 
     public void jugar() {
-        tablero.inicializar();
+        tablero.inicializarDEBUG();
         Jugador jugadorConTurno;
         do{
             jugadorConTurno = estadoPartida.quienTieneTurno();
+            System.out.println("TURNO DE: "+jugadorConTurno.toString().toUpperCase());
             tablero.printTablero();
             while(!jugadorConTurno.moverPieza());
             estadoPartida.siguienteTurno();

@@ -13,7 +13,6 @@ public class EstadoPartida {
     public EstadoPartida(Jugador[] jugadores, Tablero tablero){
         this.jugadores = jugadores;
         tieneTurno = 0;
-
         this.tablero = tablero;
     }
 
@@ -38,16 +37,13 @@ public class EstadoPartida {
         return getJugadorConColor(colorGanador);
     }
 
-    public boolean finPartida(){
-        return comprobarGanador(Color.blanco) || comprobarGanador(Color.negro);
-    }
+    public boolean finPartida(){return comprobarGanador(Color.blanco) || comprobarGanador(Color.negro);}
 
     public boolean comprobarGanador(Color color){
         Posicion posicionRey = tablero.buscarPieza(new Rey(color));
         Posicion posicionAmenazante = buscarJaque(posicionRey);
         if(posicionAmenazante != null) {
             colorGanador = tablero.getPiezaEnCasilla(posicionAmenazante).getColor();
-            System.out.println("JAQUE : "+colorGanador.toString().toUpperCase()+"!!!!!");
             return jaqueJaguar(posicionAmenazante, posicionRey) || perteneceAJugadorConTurno(posicionAmenazante);
         }
         else
