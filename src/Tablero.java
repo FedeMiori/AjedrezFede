@@ -9,7 +9,6 @@ public class Tablero {
     public final int ANCHO_TABLERO = 8;
 
     private Casilla[][] casillas = new Casilla[ALTO_TABLERO][ANCHO_TABLERO];
-    private Posicion[] ultimoMovimiento = new Posicion[2];
 
     public Tablero(){
         for (int i = 0; i < ALTO_TABLERO; i++) {
@@ -44,13 +43,6 @@ public class Tablero {
             return getCasilla(posicion).getPieza();
         else
             return null;
-    }
-
-    public Posicion[] getUltimoMovimiento() {return ultimoMovimiento;}
-
-    private void setUltimoMovimiento(Posicion origen, Posicion destino){
-        ultimoMovimiento[0] = origen;
-        ultimoMovimiento[1] = destino;
     }
 
     /**
@@ -89,7 +81,6 @@ public class Tablero {
     }
     
     public void inicializar(){
-
         //Colocamos peones
         for (int i = 0; i < ANCHO_TABLERO; i++) {
             casillas[i][1].setPieza( new Peon(Color.blanco) );
@@ -97,7 +88,6 @@ public class Tablero {
         }
 
         //Colocamos torres:
-
         getCasilla('a',1).setPieza( new Torre(Color.blanco) );
         getCasilla('h',1).setPieza( new Torre(Color.blanco) );
         getCasilla('a',8).setPieza( new Torre(Color.negro) );
@@ -122,8 +112,6 @@ public class Tablero {
         //Reinas
         getCasilla('d',1).setPieza( new Reina(Color.blanco) );
         getCasilla('d',8).setPieza( new Reina(Color.negro) );
-
-
     }
 
     public boolean moverPieza(Posicion posicionOrigen, Posicion posicionDestino, Color color){
@@ -164,7 +152,6 @@ public class Tablero {
             piezaAMover.incrementarNumMovimientos();
             getCasilla(posicionOrigen).setPieza(null);
             getCasilla(posicionDestino).setPieza(piezaAMover);
-            setUltimoMovimiento(posicionOrigen,posicionDestino);
             return true;
         }
         else {

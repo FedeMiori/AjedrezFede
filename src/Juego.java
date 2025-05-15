@@ -15,7 +15,7 @@ public class Juego {
     }
 
     public void jugar() {
-        tablero.inicializarDEBUG();
+        tablero.inicializar();
         Jugador jugadorConTurno;
         do{
             jugadorConTurno = estadoPartida.quienTieneTurno();

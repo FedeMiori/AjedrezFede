@@ -8,7 +8,6 @@ public class EstadoPartida {
     private Jugador[] jugadores;
     private int tieneTurno;
     private Tablero tablero;
-    private Posicion[] ultimoJaque;
     private Color colorGanador;
 
     public EstadoPartida(Jugador[] jugadores, Tablero tablero){
@@ -16,7 +15,6 @@ public class EstadoPartida {
         tieneTurno = 0;
 
         this.tablero = tablero;
-        this.ultimoJaque = new Posicion[2];
     }
 
     public Jugador quienTieneTurno(){
@@ -36,6 +34,10 @@ public class EstadoPartida {
         return encontrado;
     }
 
+    public Jugador quienHaGanado(){
+        return getJugadorConColor(colorGanador);
+    }
+
     public boolean finPartida(){
         return comprobarGanador(Color.blanco) || comprobarGanador(Color.negro);
     }
@@ -45,56 +47,44 @@ public class EstadoPartida {
         Posicion posicionAmenazante = buscarJaque(posicionRey);
         if(posicionAmenazante != null) {
             colorGanador = tablero.getPiezaEnCasilla(posicionAmenazante).getColor();
-            //DEBUG
-            System.out.println("DEBUG: JAQUE "+colorGanador.toString().toUpperCase());
-            return jaqueJaguar(posicionAmenazante, posicionRey);
+            System.out.println("JAQUE : "+colorGanador.toString().toUpperCase()+"!!!!!");
+            return jaqueJaguar(posicionAmenazante, posicionRey) || perteneceAJugadorConTurno(posicionAmenazante);
         }
         else
             return false;
     }
 
-    public Jugador quienHaGanado(){
-        return getJugadorConColor(colorGanador);
-    }
-
     private Posicion buscarJaque(Posicion posicionRey){
-        Posicion posicionUlimaFichaMovida = tablero.getUltimoMovimiento()[1];
-        Posicion posicionFichaJaqueAnterior = ultimoJaque[1];
-        if(posicionFichaJaqueAnterior != null)
-            System.out.println("DEBUG POSICION JAQUE ANTERIOR: "+posicionFichaJaqueAnterior.getNotacionAlgebraica().toUpperCase());
-        if(posicionUlimaFichaMovida != null && tablero.movimientoPosible(posicionUlimaFichaMovida, posicionRey)) {
-            ultimoJaque = tablero.getUltimoMovimiento();
-            return posicionUlimaFichaMovida;
+        for (int i = 0; i < tablero.ANCHO_TABLERO; i++) {
+            for (int j = 0; j < tablero.ALTO_TABLERO; j++) {
+                Posicion potencialJaque = new Posicion(i, j);
+                if (tablero.movimientoPosible(potencialJaque, posicionRey))
+                    return potencialJaque;
+            }
         }
-        else if(posicionFichaJaqueAnterior != null && tablero.movimientoPosible(posicionFichaJaqueAnterior, posicionRey)){
-            return posicionFichaJaqueAnterior;
-        }
-        else
-            return null;
+        return null;
     }
 
     //Comprueba Jaque Mate
     private boolean jaqueJaguar(Posicion posicionAmenazante, Posicion posicionRey){
         List<Posicion> listaPosiblesBloqueos = tablero.getListaPosicionesIntermedias(posicionAmenazante,posicionRey);
-
-        for(Posicion p : listaPosiblesBloqueos)
-            System.out.println(p.getNotacionAlgebraica());
-
         Color colorDelRey = tablero.getPiezaEnCasilla(posicionRey).getColor();
-        Boolean bloqueoEncontrado = false;
+        Boolean bloqueoEncontrado = false, comerAlAtacante = false, huidaDelRey = false;
         int i=0, j;
         while(i < tablero.ANCHO_TABLERO){
             j=0;
-            while(j < tablero.ALTO_TABLERO && !bloqueoEncontrado){
+            while(j < tablero.ALTO_TABLERO && !bloqueoEncontrado && !comerAlAtacante && !huidaDelRey){
                 Pieza posibleDefensora = tablero.getPiezaEnCasilla(i,j);
-                if(posibleDefensora != null && posibleDefensora.esDeColor(colorDelRey))
-                    bloqueoEncontrado = puedeDefender(new Posicion(i,j), listaPosiblesBloqueos);
+                if(posibleDefensora != null && posibleDefensora.esDeColor(colorDelRey)) {
+                    comerAlAtacante = tablero.movimientoPosible(new Posicion(i,j),posicionAmenazante);
+                    bloqueoEncontrado = puedeDefender(new Posicion(i, j), listaPosiblesBloqueos);
+                    huidaDelRey = calcularHuidaRey(posicionRey);
+                }
                 j++;
             }
             i++;
         }
-        System.out.println("BLOQUEO ENCONTRADO = "+bloqueoEncontrado);
-        return !bloqueoEncontrado;
+        return !bloqueoEncontrado && !comerAlAtacante && !huidaDelRey;
     }
 
     private boolean puedeDefender(Posicion posicionPosibleDefensora ,List<Posicion> posiblesBloqueos){
@@ -102,7 +92,23 @@ public class EstadoPartida {
         for(Posicion bloqueo: posiblesBloqueos)
             if(tablero.movimientoPosible(posicionPosibleDefensora,bloqueo))
                 puedeDefender = true;
-        System.out.println("PUEDE DEFENDER = "+puedeDefender);
         return puedeDefender;
+    }
+
+    private boolean perteneceAJugadorConTurno(Posicion posicion){
+        return tablero.getPiezaEnCasilla(posicion).getColor() == quienTieneTurno().getColor();
+    }
+
+    private boolean calcularHuidaRey(Posicion posicionRey){
+        int[] posicion = new int[] {posicionRey.getPosX(), posicionRey.getPosY()};
+        boolean puedeMoverse = false;
+        for (int i = -1; i < 2; i++) {
+            for (int j = -1; j < 2; j++) {
+                Posicion posicionDestino = new Posicion(posicion[0] + i, posicion[1] +j);
+                if(tablero.movimientoPosible(posicionRey,posicionDestino))
+                    puedeMoverse = true;
+            }
+        }
+        return puedeMoverse;
     }
 }

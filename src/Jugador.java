@@ -1,10 +1,7 @@
 import tiposPieza.*;
 
-import java.util.ArrayList;
-
 public class Jugador {
     private String nombre;
-    private ArrayList<Pieza> fichasJugador;
     private Color color;
     Tablero tablero;
 
@@ -13,6 +10,8 @@ public class Jugador {
         this.color = color;
         this.tablero = tablero;
     }
+
+    public Color getColor() {return color;}
 
     public boolean moverPieza(){
         System.out.println(nombre+" mueve pieza: ");
