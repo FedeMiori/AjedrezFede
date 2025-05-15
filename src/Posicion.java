@@ -42,7 +42,7 @@ public class Posicion {
     }
 
     /**
-     * Suma a la la posicion el vector pasado como parametro
+     * Suma a la posicion el vector pasado como parametro
      * Ej: si a la posicion (1,1) se le suma el vector (0,2) pasa a ser posicion (1,3)
      */
     public void sumarVector(int[] vectorASumar){

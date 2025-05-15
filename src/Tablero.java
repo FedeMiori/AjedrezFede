@@ -1,10 +1,15 @@
 import tiposPieza.*;
 
-public class Tablero {
-    private final int ALTO_TABLERO = 8;
-    private final int ANCHO_TABLERO = 8;
+import java.util.Iterator;
+import java.util.LinkedList;
+import java.util.List;
 
-    Casilla[][] casillas = new Casilla[ALTO_TABLERO][ANCHO_TABLERO];
+public class Tablero {
+    public final int ALTO_TABLERO = 8;
+    public final int ANCHO_TABLERO = 8;
+
+    private Casilla[][] casillas = new Casilla[ALTO_TABLERO][ANCHO_TABLERO];
+    private Posicion[] ultimoMovimiento = new Posicion[2];
 
     public Tablero(){
         for (int i = 0; i < ALTO_TABLERO; i++) {
@@ -13,6 +18,7 @@ public class Tablero {
             }
         }
     }
+
     public Casilla getCasilla(char letra, int numero){
         String input = String.valueOf(letra) + String.valueOf(numero);
         return getCasilla( new Posicion( input ) );
@@ -29,11 +35,22 @@ public class Tablero {
         return getCasilla(posicion).getPieza() == null;
     }
 
+    public Pieza getPiezaEnCasilla(int posX, int posY){
+        return getPiezaEnCasilla(new Posicion(posX,posY));
+    }
+
     public Pieza getPiezaEnCasilla(Posicion posicion){
         if(posicion.dentroLimites(ALTO_TABLERO,ANCHO_TABLERO))
             return getCasilla(posicion).getPieza();
         else
             return null;
+    }
+
+    public Posicion[] getUltimoMovimiento() {return ultimoMovimiento;}
+
+    private void setUltimoMovimiento(Posicion origen, Posicion destino){
+        ultimoMovimiento[0] = origen;
+        ultimoMovimiento[1] = destino;
     }
 
     /**
@@ -118,12 +135,46 @@ public class Tablero {
         }
     }
 
+    /***
+     * OJO! Busca una pieza igual (mismo tipo y color) NO BUSCA LA MISMA INSTANCIA
+     */
+    public Posicion buscarPieza(Pieza pieza){
+        int i=0, j;
+        Posicion resultadoBusqueda = null;
+        while(i < ANCHO_TABLERO){
+            j=0;
+            while(j < ALTO_TABLERO && resultadoBusqueda == null){
+                Pieza piezaAComprobar = getPiezaEnCasilla(i,j);
+                if(pieza.mismoTipoPieza(piezaAComprobar) && pieza.mismoColor(piezaAComprobar))
+                    resultadoBusqueda = new Posicion(i,j);
+                j++;
+            }
+            i++;
+        }
+        return resultadoBusqueda;
+    }
+
     /**
      * Metodo que mueve la pieza situalda en posicionOrigen a la posicionDestino
      * Tiene en cuenta toda la casuistica para ver si se puede realizar ese movimiento
      */
     public boolean moverPieza(Posicion posicionOrigen, Posicion posicionDestino){
-        boolean autorizadoAMover = false;
+        Pieza piezaAMover = getPiezaEnCasilla(posicionOrigen);
+        if(movimientoPosible(posicionOrigen,posicionDestino)){
+            piezaAMover.incrementarNumMovimientos();
+            getCasilla(posicionOrigen).setPieza(null);
+            getCasilla(posicionDestino).setPieza(piezaAMover);
+            setUltimoMovimiento(posicionOrigen,posicionDestino);
+            return true;
+        }
+        else {
+            System.out.println("\nERROR: No se pudo realizar el movimiento");
+            return false;
+        }
+    }
+
+    public boolean movimientoPosible(Posicion posicionOrigen, Posicion posicionDestino){
+        boolean puedeMoverse = false;
         Pieza piezaAMover = getPiezaEnCasilla(posicionOrigen);
         Pieza piezaEnDestino = getPiezaEnCasilla(posicionDestino);
         int[] vectorMovimiento = posicionOrigen.getVector( posicionDestino );
@@ -136,23 +187,15 @@ public class Tablero {
                 if (caminoDespejado(posicionOrigen, posicionDestino) || piezaAMover instanceof Caballo)
                     //Comprueba que la casilla destino esté vacia o que contenga una ficha adversaria
                     if (piezaEnDestino == null || piezaEnDestino.distintoColor(piezaAMover))
-                        autorizadoAMover = true;
+                        puedeMoverse = true;
             }
 
             //Aquí se tiene en cuenta la situacion particular en la que el peon puede comer moviendose en diagonal
             else if(piezaAMover instanceof Peon && piezaAMover.movimientoValido(vectorMovimiento, piezaEnDestino))
-                autorizadoAMover = true;
+                puedeMoverse = true;
         }
 
-        //Aquí hace el movimiento como tal
-        if(autorizadoAMover){
-            piezaAMover.incrementarNumMovimientos();
-            getCasilla(posicionOrigen).setPieza(null);
-            getCasilla(posicionDestino).setPieza(piezaAMover);
-        }else
-            System.out.println("\nERROR: No se pudo realizar el movimiento");
-
-        return autorizadoAMover;
+        return puedeMoverse;
     }
 
     /**
@@ -163,8 +206,18 @@ public class Tablero {
      * @return devuelve true si la trayectoria entre los dos puntos no tiene piezas
      */
     public boolean caminoDespejado(Posicion origen, Posicion destino){
+        List<Posicion> lista = getListaPosicionesIntermedias(origen,destino);
+        boolean sinObstaculos = true;
+        for(Posicion posicion : lista)
+            if(!casillaVacia(posicion))
+                sinObstaculos = false;
+        return sinObstaculos;
+    }
+
+    public List<Posicion> getListaPosicionesIntermedias(Posicion origen, Posicion destino){
         int[] vector = origen.getVector(destino);
         int[] vectorUnitario = getVectorUnitario(vector);
+        List<Posicion> listaPosiciones = new LinkedList<>();
 
         boolean sinObstaculos = true;
         Posicion posicionIteradora = new Posicion( origen.getPosX(), origen.getPosY() );
@@ -174,15 +227,12 @@ public class Tablero {
             //a la posicion iteradora le sumo el vector unitario
             posicionIteradora.sumarVector( vectorUnitario );
             while( ! posicionIteradora.equals(destino)
-                    && posicionIteradora.dentroLimites(ANCHO_TABLERO,ALTO_TABLERO)
-                    && sinObstaculos){
-                if(!casillaVacia(posicionIteradora)) {
-                    sinObstaculos = false;
-                }
+                    && posicionIteradora.dentroLimites(ANCHO_TABLERO,ALTO_TABLERO)){
+                listaPosiciones.add(posicionIteradora);
                 posicionIteradora.sumarVector(vectorUnitario);
             }
         }
-        return sinObstaculos;
+        return listaPosiciones;
     }
 
     private static int[] getVectorUnitario(int[] vector){
@@ -196,30 +246,5 @@ public class Tablero {
                 vectorUnitario[i] = 0;
         }
         return vectorUnitario;
-    }
-
-    public boolean finPartida(){
-        return !hayRey(Color.blanco) || !hayRey(Color.negro);
-    }
-
-    public Color quienHaGanado(){
-        Color resultado = null;
-        if(!hayRey(Color.blanco))
-            resultado = Color.negro;
-        if(!hayRey(Color.negro))
-            resultado = Color.blanco;
-        return resultado;
-    }
-
-    public boolean hayRey(Color color){
-        boolean encontrado = false;
-        for (int i = 0; i < ANCHO_TABLERO; i++) {
-            for (int j = 0; j < ALTO_TABLERO; j++) {
-                Pieza piezaProbar = casillas[i][j].getPieza();
-                if(piezaProbar instanceof Rey && piezaProbar.esDeColor(color))
-                    encontrado = true;
-            }
-        }
-        return encontrado;
     }
 }

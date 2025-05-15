@@ -66,6 +66,13 @@ public abstract class Pieza {
         return piezaEntrada == null || piezaEntrada.getColor() != color;
     }
 
+    public boolean mismoTipoPieza(Pieza pieza){
+        if(pieza != null)
+            return this.getClass() == pieza.getClass();
+        else
+            return false;
+    }
+
     public String toString(){
         if(esDeColor(Color.negro))
             return parametroVerde + letra + resetTipografia;
