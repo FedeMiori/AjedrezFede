@@ -15,7 +15,7 @@ public class Juego {
     }
 
     public void jugar() {
-        tablero.inicializar();
+        tablero.inicializarDEBUG();
         Jugador jugadorConTurno;
         do{
             jugadorConTurno = estadoPartida.quienTieneTurno();
@@ -23,6 +23,8 @@ public class Juego {
             while(!jugadorConTurno.moverPieza());
             estadoPartida.siguienteTurno();
         }while(!finPartida());
+        System.out.println("FIN PARTIDA");
+        tablero.printTablero();
         Jugador jugadorGanador = estadoPartida.quienHaGanado();
         System.out.println("GANADOR : "+jugadorGanador.toString().toUpperCase());
     }

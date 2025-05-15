@@ -24,4 +24,9 @@ public class Jugador {
     public boolean esDeColor(Color color){
         return this.color == color;
     }
+
+    @Override
+    public String toString() {
+        return nombre;
+    }
 }

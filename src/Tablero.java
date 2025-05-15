@@ -219,7 +219,6 @@ public class Tablero {
         int[] vectorUnitario = getVectorUnitario(vector);
         List<Posicion> listaPosiciones = new LinkedList<>();
 
-        boolean sinObstaculos = true;
         Posicion posicionIteradora = new Posicion( origen.getPosX(), origen.getPosY() );
 
         //Aquí se comprueba que el vector sea diagonal, horizontal o diagonal
@@ -228,7 +227,7 @@ public class Tablero {
             posicionIteradora.sumarVector( vectorUnitario );
             while( ! posicionIteradora.equals(destino)
                     && posicionIteradora.dentroLimites(ANCHO_TABLERO,ALTO_TABLERO)){
-                listaPosiciones.add(posicionIteradora);
+                listaPosiciones.add(posicionIteradora.generarCopia());
                 posicionIteradora.sumarVector(vectorUnitario);
             }
         }
@@ -246,5 +245,21 @@ public class Tablero {
                 vectorUnitario[i] = 0;
         }
         return vectorUnitario;
+    }
+
+    public void inicializarDEBUG(){
+        //Reyes
+        getCasilla('e',1).setPieza( new Rey(Color.blanco) );
+        getCasilla('e',8).setPieza( new Rey(Color.negro) );
+
+        getCasilla('d',6).setPieza( new Torre(Color.negro) );
+        getCasilla('d',4).setPieza( new Torre(Color.blanco) );
+    }
+
+    public static void main(String[] args) {
+        Tablero t = new Tablero();
+        t.inicializarDEBUG();
+        t.printTablero();
+        System.out.println(t.movimientoPosible(new Posicion('d',6),new Posicion('e',6)));
     }
 }

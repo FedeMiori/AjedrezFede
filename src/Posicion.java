@@ -99,4 +99,8 @@ public class Posicion {
     public boolean equals(Posicion posicionAComprobar) {
         return posicionAComprobar.getPosX() == posX && posicionAComprobar.getPosY() == posY;
     }
+
+    public Posicion generarCopia(){
+        return new Posicion(getPosX(),getPosY());
+    }
 }
