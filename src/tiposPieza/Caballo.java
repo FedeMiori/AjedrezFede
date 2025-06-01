@@ -4,7 +4,7 @@ import static java.lang.Math.abs;
 
 public class Caballo extends Pieza {
     public Caballo(Color color) {
-        super('N',color);
+        super('♘',color);
     }
 
     @Override

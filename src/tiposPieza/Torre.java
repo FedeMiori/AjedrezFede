@@ -2,7 +2,7 @@ package tiposPieza;
 
 public class Torre extends Pieza {
     public Torre(Color color) {
-        super('R',color);
+        super('♖',color);
     }
 
     @Override

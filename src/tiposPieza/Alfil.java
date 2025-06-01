@@ -4,7 +4,7 @@ import static java.lang.Math.abs;
 
 public class Alfil extends Pieza {
     public Alfil(Color color) {
-        super('B',color);
+        super('♗',color);
     }
 
     @Override

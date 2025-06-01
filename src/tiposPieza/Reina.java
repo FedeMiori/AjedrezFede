@@ -4,7 +4,7 @@ import static java.lang.Math.abs;
 
 public class Reina extends Pieza {
     public Reina(Color color) {
-        super('Q',color);
+        super('♕',color);
     }
 
     @Override

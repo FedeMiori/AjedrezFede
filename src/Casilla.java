@@ -3,6 +3,7 @@ import tiposPieza.Pieza;
 public class Casilla {
     private Posicion posicion;
     private Pieza pieza;
+    private static final String invisiblePlaceholder = "\u3000"; // Espacio ideográfico
 
 
     public Casilla(Posicion posicion) {
@@ -21,7 +22,7 @@ public class Casilla {
 
     public String toString(){
         if(pieza ==null)
-            return " ";
+            return invisiblePlaceholder;
         else
             return pieza.toString();
     }

@@ -2,7 +2,7 @@ package tiposPieza;
 
 public class Peon extends Pieza {
     public Peon(Color color) {
-        super('P',color);
+        super('♙',color);
     }
 
     @Override

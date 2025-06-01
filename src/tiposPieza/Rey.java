@@ -2,7 +2,7 @@ package tiposPieza;
 
 public class Rey extends Pieza {
     public Rey(Color color) {
-        super('K',color);
+        super('♔',color);
     }
 
     @Override

@@ -7,6 +7,7 @@ import java.util.List;
 public class Tablero {
     public final int ALTO_TABLERO = 8;
     public final int ANCHO_TABLERO = 8;
+    private static final String anchoGuion = "-" + "\u3000" + "-";  // —
 
     private Casilla[][] casillas = new Casilla[ALTO_TABLERO][ANCHO_TABLERO];
 
@@ -51,14 +52,14 @@ public class Tablero {
     public void printTablero(){
         System.out.print("   ");
         for (int i = 0; i < ANCHO_TABLERO; i++) {
-            System.out.print("  "+(char) ('a'+i)+" ");
+            System.out.print("  "+(char) ('a'+i)+"\u3000");
         }
         System.out.println();
 
         for (int i = ALTO_TABLERO -1; i >=0; i--) {
             System.out.print("   ");
             for (int j = 0; j < ANCHO_TABLERO; j++) {
-                System.out.print("+---");
+                System.out.print("+" + anchoGuion);
             }
             System.out.println("+");
 
@@ -70,12 +71,12 @@ public class Tablero {
         }
         System.out.print("   ");
         for (int j = 0; j < ANCHO_TABLERO; j++) {
-            System.out.print("+---");
+            System.out.print("+"+anchoGuion);
         }
         System.out.println("+");
         System.out.print("   ");
         for (int i = 0; i < ANCHO_TABLERO; i++) {
-            System.out.print("  "+(char) ('a'+i)+" ");
+            System.out.print("  "+(char) ('a'+i)+"\u3000");
         }
         System.out.println();
     }
